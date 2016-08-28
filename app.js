@@ -17,8 +17,8 @@
   };
 
   var appendChildren = function (container) {
-    return function appendToContainer() {
-      return Array.prototype.map.call(arguments, function (elem) {
+    return function appendToContainer(arr) {
+      return Array.prototype.map.call(arr, function (elem) {
         container.appendChild(elem);
       });
     }
@@ -33,21 +33,42 @@
 
   // Add date and title fields to the object
   function parseDataFromGitHub (response) {
-    return JSON.parse(response).reduce(function(res, elem) {
-      var parsed = elem.name.split('.')[0].split('-');
-      var title = parsed.splice(3).join(' ');
-      var date = {
-        year: parsed[0],
-        month: parsed[1],
-        day: parsed[2]
-      };
+    return JSON.parse(response)
+      .reduce(function(res, elem) {
+        var parsed = elem.name.split('.')[0].split('-');
+        var title = parsed.splice(3).join(' ');
+        var date = {
+          year: parsed[0],
+          month: parsed[1],
+          day: parsed[2]
+        };
 
-      elem.title = title;
-      elem.date = date;
+        elem.title = title;
+        elem.date = date;
 
-      res.push(elem);
-      return res;
-    }, []);
+        res.push(elem);
+        return res;
+      }, [])
+    .filter(function (elem) {
+      return elem.title.length > 0;
+    });
+  }
+
+  // Build nodes with articles
+  function buildArticleNodes (elem) {
+    var article = createElementWithAttrs('article', {
+      'class': 'each'
+    });
+
+    var h1 = createElementWithAttrs('h1', {});
+    h1.innerText = elem.title;
+
+    var bottomBorder = createElementWithAttrs('div', {'class': 'bottom-border'});
+    var expanded = createElementWithAttrs('div', {'class': 'expanded'});
+
+    var container = appendChildren(article);
+    container([h1, bottomBorder, expanded]);
+    return article;
   }
 
   /**
@@ -56,40 +77,13 @@
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'https://api.github.com/repos/keyserfaty/keyserfaty.github.io/contents/_posts');
   xhr.addEventListener('load', function(e) {
-    var response = parseDataFromGitHub(e.target.response);
-    var titleNodes = response.map(function(elem) {
-      var article = createElementWithAttrs('article', {
-        'class': 'each'
-      });
+    var doc = document;
 
-      var h1 = createElementWithAttrs('h1', {});
-      h1.innerText = elem.title;
-
-      var bottomBorder = createElementWithAttrs('div', {
-        'class': 'bottom-border'
-      });
-      var expanded = createElementWithAttrs('div', {
-        'class': 'expanded'
-      });
-
-      var container = appendChildren(article);
-      var containerAppended = container(h1, bottomBorder, expanded);
-      console.log(containerAppended)
-    });
-
-    console.log(titleNodes)
+    var articleNodes = parseDataFromGitHub(e.target.response).map(buildArticleNodes);
+    var containerDom = doc.querySelector('.container');
+    var containerNode = appendChildren(containerDom);
+    containerNode(articleNodes);
   });
 
   xhr.send();
-
-  // <article class="each">
-  //   <h1>I’ve been organizing my React files the wrong way, and you probably have too.</h1>
-  // <div class="bottom-border"></div>
-  //   <div class="expanded">
-  //   <!--<p>Repellendus, cras proident aute exercitation tempore potenti nisl ullam ab corrupti fugiat, lacinia aliquet aut anim metus fusce taciti sagittis incididunt perferendis ut imperdiet molestias nascetur exercitation iure possimus potenti, nullam sapiente ducimus, sint enim morbi. Maxime cursus cupiditate vero, rhoncus dictum! Provident aliquet! Irure. Augue netus tortor magna metus, varius lobortis non magnis vero. Irure justo officiis iaculis cupiditate. Arcu omnis consequatur ullamcorper. Quidem, volutpat, morbi aspernatur! Taciti in.</p>-->
-  // <!--<button />-->
-  // </div>
-  // </article>
-
-  // when ready create dom elements for index
 } ());
