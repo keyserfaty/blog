@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css?family=Jaldi:400,700|Source+Sans+Pro');
+
+body {
+    margin: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+h1 {
+    margin: 0;
+    font-family: 'Jaldi', sans-serif;
+    font-weight: 700;
+    font-size: 3em;
+    white-space: nowrap;
+    line-height: 1em;
+}
+
+.container {
+    margin: 107px 0 0 115px;
+}
+
+.each {
+    position: relative;
+}
+
+.each h1 {
+    margin-top: 54px;
+    position: relative;
+    font-size: 60px;
+    margin-left: -3px;
+}
+
+.each .bottom-border {
+    height: 12px;
+    position: absolute;
+    top: 71%;
+    z-index: -1;
+    left: -69px;
+    width: 200%;
+    border-left: 14px solid transparent;
+    border-bottom: 10px solid #fdf516;
+}
+
+.each .expanded {
+    position: absolute;
+    height: 276px;
+}
+
+.each .expanded p {
+    font-size: 18px;
+    margin-top: 21px;
+    line-height: 24px;
+    width: 50%;
+}
+
+.each .expanded .button-top,
+.each .expanded .button-bottom,
+.each .expanded .button-left,
+.each .expanded .button-right {
+    position: absolute;
+    bottom: 0;
+    border: none;
+    height: 14px;
+    width: 38px;
+}
+
+.each .expanded .button-top {
+    position: absolute;
+    bottom: 0;
+    border: none;
+    height: 14px;
+    width: 38px;
+    background: #fff;
+    z-index: 1;
+}
+
+.each .expanded .button-left {
+    z-index: 0;
+    bottom: 14px;
+    border-left: 6px solid transparent;
+    border-bottom: 5px solid #fdf516;
+    height: 0;
+    left: 0;
+    background: transparent;
+}
+
+.each .expanded .button-bottom {
+    position: absolute;
+    bottom: 5px;
+    border: none;
+    height: 14px;
+    width: 38px;
+    background: #ebe315;
+    left: 7px;
+}
+
+.each .expanded .button-right {
+    z-index: 1;
+    bottom: 3px;
+    border-right: 8px solid #fdf516;
+    border-bottom: 11px solid transparent;
+    border-top: 6px solid transparent;
+    height: 0;
+    left: 38px;
+    width: 0;
+}
+
+.each .expanded .box-border {
+    position: absolute;
+    width: 200%;
+    bottom: -15px;
+    z-index: -2;
+    height: 286px;
+    left: -95px;
+    border-left: 375px solid #fff;
+    border-bottom: 286px solid transparent;
+}
+
+.each .expanded .box-back {
+    position: absolute;
+    width: 200%;
+    bottom: -15px;
+    z-index: -3;
+    height: 286px;
+    left: -95px;
+    background: -webkit-gradient(linear, 0% 0%, 0% 65%, from(#fdf516), to(#adadad));
+    opacity: 0.2;
+}
