@@ -29,6 +29,10 @@ h1 {
     margin-left: -3px;
 }
 
+.each.expanded {
+    height: 350px;
+}
+
 .each .bottom-border {
     height: 12px;
     position: absolute;
