@@ -1,7 +1,20 @@
 (function() {
-  /**
+  /********************************
+   * General tools
+   ********************************/
+  function http (props, cb) {
+    var method = props.method || 'GET';
+    var url = props.url;
+
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener('load', cb);
+    xhr.open(method, url);
+    xhr.send();
+  }
+
+  /********************************
    * DOM tools
-   */
+   ********************************/
   var setAttributes = function(container, attrs) {
     Object.keys(attrs).map(function (key) {
       container.setAttribute(key, attrs[key]);
@@ -23,6 +36,10 @@
       });
     }
   };
+
+  /********************************
+   * App specific helper functions
+   ********************************/
 
   // Decode base64 unicode
   function b64DecodeUnicode(str) {
@@ -61,8 +78,11 @@
       'class': 'each'
     });
 
-    var h1 = createElementWithAttrs('h1', {});
+    var h1 = createElementWithAttrs('h1', {
+      'name': elem.name
+    });
     h1.innerText = elem.title[0].toUpperCase() + elem.title.slice(1);
+    h1.onclick = handleTitleOnClick;
 
     var bottomBorder = createElementWithAttrs('div', {'class': 'bottom-border'});
     var expanded = createElementWithAttrs('div', {'class': 'expanded'});
@@ -72,19 +92,37 @@
     return article;
   }
 
-  /**
-   * Bring posts list from github (only the titles here)
-   */
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.github.com/repos/keyserfaty/keyserfaty.github.io/contents/_posts');
-  xhr.addEventListener('load', function(e) {
+  /********************************
+   * App
+   ********************************/
+  // Bring posts list from GitHub (only the titles here)
+  var url = 'https://api.github.com/repos/keyserfaty/keyserfaty.github.io/contents/_posts/';
+
+  http({
+    url: url
+  }, onInitialRequestReady);
+
+  var parsedResponse;
+  function onInitialRequestReady (e) {
     var doc = document;
 
-    var articleNodes = parseDataFromGitHub(e.target.response).map(buildArticleNodes);
+    /*
+     * Append articles to the DOM
+     */
+    parsedResponse = parseDataFromGitHub(e.target.response);
+    var articleNodes = parsedResponse.map(buildArticleNodes);
     var containerDom = doc.querySelector('.container');
-    var containerNode = appendChildren(containerDom);
-    containerNode(articleNodes);
-  });
+    appendChildren(containerDom)(articleNodes);
+  }
 
-  xhr.send();
+  function handleTitleOnClick(e) {
+    http({
+      url: url + e.target.attributes[0].value
+    }, function (e) {
+      var content = b64DecodeUnicode(JSON.parse(e.target.response).content)
+      console.log(content)
+    });
+  }
+
+
 } ());
