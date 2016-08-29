@@ -116,10 +116,20 @@
 
   function handleTitleOnClick(e) {
     var article = this;
+    var articleEvent = e;
     http({
       url: URL + e.target.attributes[0].value
     }, function (e) {
-      var expandedNode = doc.querySelector('.expanded');
+      var expandedNode = articleEvent.target.parentElement.lastChild;
+
+      var articleNode = articleEvent.target.parentNode;
+      // TODO: need a toggle class fn
+      setAttributes(articleNode, {
+        'class': 'each expanded'
+      });
+
+      var borderBottomNode = articleEvent.target.nextSibling;
+      articleNode.removeChild(borderBottomNode);
 
       var contentNode = createElementWithAttrs('p', {});
       contentNode.innerText = b64DecodeUnicode(JSON.parse(e.target.response).content);
