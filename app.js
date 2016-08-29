@@ -96,16 +96,15 @@
    * App
    ********************************/
   // Bring posts list from GitHub (only the titles here)
-  var url = 'https://api.github.com/repos/keyserfaty/keyserfaty.github.io/contents/_posts/';
+  var doc = document;
+  var URL = 'https://api.github.com/repos/keyserfaty/keyserfaty.github.io/contents/_posts/';
 
   http({
-    url: url
+    url: URL
   }, onInitialRequestReady);
 
   var parsedResponse;
   function onInitialRequestReady (e) {
-    var doc = document;
-
     /*
      * Append articles to the DOM
      */
@@ -116,11 +115,26 @@
   }
 
   function handleTitleOnClick(e) {
+    var article = this;
     http({
-      url: url + e.target.attributes[0].value
+      url: URL + e.target.attributes[0].value
     }, function (e) {
-      var content = b64DecodeUnicode(JSON.parse(e.target.response).content)
-      console.log(content)
+      var expandedNode = doc.querySelector('.expanded');
+
+      var contentNode = createElementWithAttrs('p', {});
+      contentNode.innerText = b64DecodeUnicode(JSON.parse(e.target.response).content);
+
+      var buttonContainerNode = createElementWithAttrs('div', {'class': 'button'});
+      var buttonLeftNode = createElementWithAttrs('div', {'class': 'button-left'});
+      var buttonRightNode = createElementWithAttrs('div', {'class': 'button-right'});
+      var buttonTopNode = createElementWithAttrs('div', {'class': 'button-top'});
+      var buttonBottomNode = createElementWithAttrs('div', {'class': 'button-bottom'});
+      appendChildren(buttonContainerNode)([buttonLeftNode, buttonRightNode, buttonTopNode, buttonBottomNode]);
+
+      var boxBorderNode = createElementWithAttrs('div', {'class': 'box-border'});
+      var boxBackNode = createElementWithAttrs('div', {'class': 'box-back'});
+
+      appendChildren(expandedNode)([contentNode, buttonContainerNode, boxBorderNode, boxBackNode]);
     });
   }
 
