@@ -66,10 +66,10 @@
         res.push(elem);
         return res;
       }, [])
-    .filter(function (elem) {
-      return elem.title.length > 0;
-    })
-    .reverse();
+      .filter(function (elem) {
+        return elem.title.length > 0;
+      })
+      .reverse();
   }
 
   // Build nodes with articles
@@ -95,7 +95,7 @@
   /********************************
    * App
    ********************************/
-  // Bring posts list from GitHub (only the titles here)
+    // Bring posts list from GitHub (only the titles here)
   var doc = document;
   var URL = 'https://api.github.com/repos/keyserfaty/keyserfaty.github.io/contents/_posts/';
 
