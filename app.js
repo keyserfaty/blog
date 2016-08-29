@@ -51,7 +51,8 @@
       }, [])
     .filter(function (elem) {
       return elem.title.length > 0;
-    });
+    })
+    .reverse();
   }
 
   // Build nodes with articles
@@ -61,7 +62,7 @@
     });
 
     var h1 = createElementWithAttrs('h1', {});
-    h1.innerText = elem.title;
+    h1.innerText = elem.title[0].toUpperCase() + elem.title.slice(1);
 
     var bottomBorder = createElementWithAttrs('div', {'class': 'bottom-border'});
     var expanded = createElementWithAttrs('div', {'class': 'expanded'});
